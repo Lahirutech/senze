@@ -5,6 +5,7 @@ const jwt =require("jsonwebtoken");
 const keys=require("../../config/keys");
 const{ensureAuthenticated}=require('../../helpers/auth');
 const passport=require('passport');
+const gravatar=require('gravatar');
 
 
 //load input validation
@@ -13,28 +14,47 @@ const validateLoginInput=require("../../validation/login");
 
 //Load User model
 const User=require("../../models/User");
+
 // @route POST api/users/register
 // @desc Register user
 // @access Public
 
-router.post("/register",(req,res)=>{
+router.post("/register", async (req, res) => {
     //Form Validation
-    const {errors,isValid}=validateRegisterInput(req.body);
-
+    const {errors,isValid} = validateRegisterInput(req.body);
+  
     //check validation
-    if(!isValid){
-        return res. status(400).json(errors);
+    if (!isValid) {
+      return res.status(400).json(errors);
     }
-    User.findOne({email:req.body.email}).then(user=>{
-        if(user){
-            return res.status(400).json({email:"Email already exits"
-        });
-        }
-        const newUser=new User({
-            name:req.body.name,
-            email:req.body.email,
-            password:req.body.password
-        });
+    //Checking the user Email existance
+    let user = await User.findOne({
+      email: req.body.email
+    });
+    if (user) {
+      return res.status(404).json({
+        email: "Email already exits"
+      });
+    }
+    //Checking the Username existance
+    user = await User.findOne({
+      name: req.body.name
+    });
+    if (user) {
+      return res.status(404).json({
+        name: "Username Already Exist"
+      });
+    }
+    var avatar = gravatar.url('req.body.email', {s: '200', r: 'pg', d: 'mm'});
+
+ 
+  const newUser = new User({
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+    avatar
+    });
+
         //Hashpassword before saving database
             bcrypt.genSalt(10,(err,salt)=>{
                 bcrypt.hash(newUser.password,salt,(err,hash)=>
@@ -47,8 +67,8 @@ router.post("/register",(req,res)=>{
                     .catch(err=>console.log(err));
                 });
             });
-    });
-});
+
+}) 
 
 
 // @route POST api/users/login
