@@ -27,10 +27,10 @@ router.post(
       }
   
       const newPost = new Post({
-        text: req.body.text,
-        name: req.body.name,
+        title: req.body.title,
+        content: req.body.content,
         avatar: req.body.avatar,
-        user: req.user.id
+        UserID: req.user.id
       });
   
       newPost.save().then(post => res.json(post));
