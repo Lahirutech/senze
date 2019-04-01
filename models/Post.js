@@ -7,17 +7,27 @@ const PostSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'users'
   },
-  text: {
+  title: {
     type: String,
     required: true
   },
-  name: {
+  UserID:{
+      type:String
+  },
+  content: {
     type: String
   },
-  avatar: {
+  categoryID: {
     type: String
   },
-   date: {
+  remarks:{
+      type:String
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now
+  },
+  CreatedAt: {
     type: Date,
     default: Date.now
   }
