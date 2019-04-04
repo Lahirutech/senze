@@ -1,5 +1,9 @@
 const express=require("express");
 const router = express.Router();
+const jwt =require("jsonwebtoken");
+const config = require("../../config/keys.js");
+
+
 
 const passport=require('passport');
 //Load User model
@@ -35,6 +39,44 @@ router.post(
   
       newPost.save().then(post => res.json(post));
     }
+
   );
 
+router.post('/new',verifyToken,(req,res)=>{
+  jwt.verify(req.token,config.secretOrKey,(err,authData)=>{
+    if(err){
+      res.sendStatus(403);
+    }else{
+      res.json({
+        message:'Post Created..',
+        authData
+      });
+    }
+  });
+});
+
+//verifying the token
+function verifyToken(req,res,next){
+  //get auth header value
+  const bearerHeader=req.headers['autorization'];
+  if(typeof bearerHeader!== 'undefined'){
+    //split from the space
+    const bearer=bearerHeader.split(' ');
+    //Get the token from the array
+    const bearerToken=bearer[1];
+    //set the token
+    req.token=bearerToken;
+    //callinf the next
+    console.log(bearerToken);
+    next();
+
+  }else{
+    //forbidden
+    res.sendStatus(403)
+    .json({
+      message:'Post access denied..'
+    });
+  } 
+
+}
 module.exports=router;

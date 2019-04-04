@@ -6,6 +6,8 @@ const keys=require("../../config/keys");
 const{ensureAuthenticated}=require('../../helpers/auth');
 const passport=require('passport');
 const gravatar=require('gravatar');
+const shortid = require('shortid');
+
 
 
 //load input validation
@@ -49,6 +51,7 @@ router.post("/register", async (req, res) => {
 
  
   const newUser = new User({
+    _id:shortid.generate(),
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
@@ -129,11 +132,26 @@ router.get('/logout',(req,res)=>{
     req.logout();
     res.json({logged:false});
 });
-//view Posts
-router.get('/view',passport.authenticate('jwt',{session:false}),(req,res)=>{
-    res.json(req.user);
+
+router.get('/view/:id',(req,res)=>{
+  User.findById((req.params.id), function (err, doc) {
+    if (err)
+    {return res.status(404).end();}
+    return res.status(200).json(doc);
+  });
+  
 });
-/////////////
+
+
+  router.get('/view/',(req,res)=>{
+      User.find({})
+      .then(data=>{
+  
+        if(!data){return res.status(404).end();}
+        return res.status(200).json(data);
+      })
+    });
+
 
 //validation
 const validatePostInput=require('../../validation/post');
