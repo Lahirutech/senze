@@ -15,6 +15,7 @@ const db=require("../../config/keys").mongoURI;
 //load input validation
 const validateRegisterInput=require("../../validation/register");
 const validateLoginInput=require("../../validation/login");
+const validatePasswordChange=require("../../validation/reset")
 
 //Load User model
 const User=require("../../models/User");
@@ -192,6 +193,15 @@ router.post('/reset/',(req,res)=>{
   res.json({password:req.body.email});
   //hashing the password before saving 
   bcrypt.genSalt(10,(err,salt)=>{
+
+    const { errors, isValid } = validatePasswordChange(req.body);
+  
+    // Check Validation
+    if (!isValid) {
+      // If any errors, send 400 with errors object
+      return res.status(400).json(errors);
+    }
+
     bcrypt.hash(req.body.password,salt,(err,hash)=>
     {
         if(err) throw err;
