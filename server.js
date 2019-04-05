@@ -17,7 +17,7 @@ app.use(
 );
 app.use(bodyParser.json());
 
-//DB consfig
+//DB config
 const db=require("./config/keys").mongoURI;
 
 // coonecting to MongoDB
@@ -29,6 +29,7 @@ mongoose
 
     .then(()=>console.log("MongoDB successfulle connected"))
     .catch(err=>console.log(err));
+    
     //passport miidlware
     app.use(passport.initialize());
 

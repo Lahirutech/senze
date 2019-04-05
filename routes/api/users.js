@@ -7,6 +7,8 @@ const{ensureAuthenticated}=require('../../helpers/auth');
 const passport=require('passport');
 const gravatar=require('gravatar');
 const shortid = require('shortid');
+const db=require("../../config/keys").mongoURI;
+
 
 
 
@@ -181,5 +183,31 @@ router.post(
       newPost.save().then(post => res.json(post));
     }
   );
+
+  // @route POST api/users/reset
+// @desc Login user and change password
+// @access private
+
+router.post('/reset/',(req,res)=>{
+  res.json({password:req.body.email});
+  //hashing the password before saving 
+  bcrypt.genSalt(10,(err,salt)=>{
+    bcrypt.hash(req.body.password,salt,(err,hash)=>
+    {
+        if(err) throw err;
+        password=hash;
+        //updating the database
+        var myquery = { email: req.body.email};
+        var newvalues = { password:password};
+    User.updateOne(myquery, newvalues, function(err, res) {
+    if (err) throw err;
+    console.log("1 document updated");
+  });
+
+    });
+});
+  
+});
+
 
 module.exports=router;
