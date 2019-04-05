@@ -14,6 +14,9 @@ const PostSchema = new Schema({
   UserID:{
       type:String
   },
+  PostID:{
+    type:String
+},
   content: {
     type: String
   },
