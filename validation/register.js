@@ -13,9 +13,9 @@ module.exports = function validateRegisterInput(data) {
     errors.name = "Name field is required";
   }
   //School check
-  if(Validator.isEmpty(data.school)){
-    errors.school="School fieldis required";
-  }
+  // if(Validator.isEmpty(data.school)){
+  //   errors.school="School fieldis required";
+  // }
 // Email checks
   if (Validator.isEmpty(data.email)) {
     errors.email = "Email field is required";

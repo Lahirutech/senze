@@ -18,7 +18,7 @@ const UserSchema=new Schema({
     },
     school:{
         type:String,
-        required:true
+        required:false
     },
     avatar:{
         type:String
