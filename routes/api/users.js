@@ -24,7 +24,7 @@ const User=require("../../models/User");
 // @desc Register user
 // @access Public
 
-router.post("/register", async (req, res) => {
+router.post("/register/new", async (req, res) => {
     //Form Validation
     const {errors,isValid} = validateRegisterInput(req.body);
   
@@ -58,6 +58,7 @@ router.post("/register", async (req, res) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
+    school:req.body.school,
     avatar
     });
 

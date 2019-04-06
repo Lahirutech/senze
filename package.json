@@ -4,9 +4,12 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "client-install":"npm insatall --prefix client",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "server": "nodemon server.js"
+    "client":"npm start --prefixclient",
+    "server": "nodemon server.js",
+    "dev":"concurrently \"npm run server\"\"npm run client\""
   },
   "author": "Lanka Rathnayaka",
   "license": "MIT",
